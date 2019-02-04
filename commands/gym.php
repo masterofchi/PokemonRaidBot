@@ -22,7 +22,7 @@ if ($update['message']['chat']['type'] == 'private') {
             UPDATE gyms
             SET gym_name = :gym_name, show_gym = 1
             WHERE
-                gym_id = :gym_id
+                id = :gym_id
             ORDER BY
                 id DESC
             LIMIT 1
