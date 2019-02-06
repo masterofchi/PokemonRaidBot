@@ -78,7 +78,7 @@ $keys = [
 // Answer location message.
 if(isset($update['message']['location'])) {
     // Build message.
-    $msg = getTranslation('create_raid') . ': <i>' . $address . '</i>';
+    $msg = getTranslation('create_gym');
 
     // Send message.
     send_message($update['message']['chat']['id'], $msg, $keys, ['reply_markup' => ['selective' => true, 'one_time_keyboard' => true]]);

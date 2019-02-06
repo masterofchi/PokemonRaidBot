@@ -7,50 +7,30 @@ debug_log('edit_raidlevel()');
 //debug_log($data);
 
 // Get gym data via ID in arg
-$gym_id = $data['arg'];
-$gym = get_gym($gym_id);
+$city = $data['arg'];
 
 // Back key id, action and arg
 $back_id = 0;
-$back_action = 'raid_by_gym';
+$back_action = 'gym_by_location';
 $back_arg = $data['id'];
-$gym_first_letter = $back_arg;
+$gym_id = $back_arg;
 
-// Get the keys.
-$keys = raid_edit_raidlevel_keys($gym_id, $gym_first_letter);
+$rs = my_query(
+    "
+    UPDATE   gyms
+    SET      address = '$city'
+    WHERE    id = '$gym_id';
+    "
+);
 
-// No keys found.
-if (!$keys) {
-    // Create the keys.
-    $keys = [
-        [
-            [
-                'text'          => getTranslation('abort'),
-                'callback_data' => '0:exit:0'
-            ]
-        ]
-    ];
-} else {
-    // Add navigation keys.
-    $nav_keys = [];
-    $nav_keys[] = universal_inner_key($nav_keys, $back_id, $back_action, $back_arg, getTranslation('back'));
-    $nav_keys[] = universal_inner_key($nav_keys, $gym_id, 'exit', '2', getTranslation('abort'));
-    $nav_keys = inline_key_array($nav_keys, 2);
-    // Merge keys.
-    $keys = array_merge($keys, $nav_keys);
-}
-
-// Build message.
-$msg = getTranslation('create_raid') . ': <i>' . $gym['address'] . '</i>';
-
-// Build callback message string.
-$callback_response = getTranslation('gym_saved');
+$msg = 'Arena wurde angelegt. Bitte Namen eintragen mit /gym [ARENANAME]';
+$keys = [];
 
 // Answer callback.
-answerCallbackQuery($update['callback_query']['id'], $callback_response);
+answerCallbackQuery($update['callback_query']['id'], $msg);
 
 // Edit the message.
-edit_message($update, $msg . CR . getTranslation('select_raid_level') . ':', $keys);
+edit_message($update, $msg, $keys);
 
 // Exit.
 exit();
