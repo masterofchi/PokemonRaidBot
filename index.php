@@ -125,6 +125,8 @@ if (isset($update['callback_query'])) {
     // Create raid and exit.
     if(RAID_VIA_LOCATION == true) {
         include_once(ROOT_PATH . '/mods/raid_by_location.php');
+    } else{
+        include_once(ROOT_PATH . '/mods/gym_by_location.php');
     }
 
 // Cleanup collection from channel/supergroup messages.
