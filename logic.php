@@ -1023,7 +1023,7 @@ function raid_edit_gyms_first_letter_keys($address) {
             SELECT UPPER(LEFT(gym_name, 1)) AS first_letter
             FROM      gyms
             WHERE     show_gym = 1
-            AND       address = {
+            AND       address = {$address}
             GROUP BY LEFT(gym_name, 1)
             "
         );
