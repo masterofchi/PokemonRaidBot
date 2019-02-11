@@ -47,6 +47,9 @@ answerCallbackQuery($update['callback_query']['id'], $msg_callback);
 // Edit the message, but disable the web preview!
 edit_message($update, $msg_callback, $keys, ['disable_web_page_preview' => 'true']);
 
-// Send the message, but disable the web preview!
-send_message('-324290024', $msg, $keys, ['disable_web_page_preview' => 'true']);
+$chats = explode(',', SHARE_CHATS);
+foreach($chats as $chat) {
+    // Send the message, but disable the web preview!
+    send_message($chat, $msg, $keys, ['disable_web_page_preview' => 'true']);
+}
 exit();
