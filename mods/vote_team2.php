@@ -8,7 +8,7 @@ debug_log('vote_team()');
 
 // Update team in users table.
 $team = $data['arg'];
-$user_id = $data['id'];
+$user_id = $update['callback_query']['from']['id'];
 my_query(
     "
     UPDATE    users

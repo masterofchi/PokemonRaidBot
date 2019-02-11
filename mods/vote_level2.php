@@ -8,7 +8,7 @@ debug_log('vote_level()');
 
 // Get action.
 $action = $data['arg'];
-$user_id = $data['id'];
+$user_id = $update['callback_query']['from']['id'];
 
 // Up-vote.
 if ($action == 'up') {
