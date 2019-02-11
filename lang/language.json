@@ -388,6 +388,15 @@
     "RU":"Развернуть",
     "NO":"Flere valg",
     "FR":"Agrandir"
+  },
+  "gym_added":{
+    "DE":"Arena wurde erfolgreich hinzugefügt"
+  },
+  "gym_updatet":{
+    "DE":"Arena wurde erfolgreich aktualisiert"
+  },
+  "create_gym":{
+    "DE":"In welcher Stadt ist die Arena?"
   }
 }
 

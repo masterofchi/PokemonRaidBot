@@ -13,7 +13,7 @@ $gym_name = trim(substr($update['message']['text'], 4));
 debug_log('Setting gym name to ' . $gym_name);
 
 // Private chat type.
-if ($update['message']['chat']['type'] == 'private') {
+if ($update['message']['chat']['type'] == 'private' && !empty($gym_name)) {
 
     try {
      
@@ -22,14 +22,15 @@ if ($update['message']['chat']['type'] == 'private') {
             UPDATE gyms
             SET gym_name = :gym_name, show_gym = 1
             WHERE
-                id = :gym_id
+                gym_name = :gym_id
             ORDER BY
                 id DESC
             LIMIT 1
         ';
+        debug_log('gym_id ' . $update['message']['from']['id']);
         $statement = $dbh->prepare( $query );
         $statement->bindValue(':gym_name', $gym_name, PDO::PARAM_STR);
-        $statement->bindValue(':gym_id', $update['message']['from']['id'], PDO::PARAM_INT);
+        $statement->bindValue(':gym_id', '#'.$update['message']['from']['id'], PDO::PARAM_STR);
         $statement->execute();   
     }
     catch (PDOException $exception) {
@@ -41,5 +42,8 @@ if ($update['message']['chat']['type'] == 'private') {
 
     // Send the message.
     sendMessage($update['message']['chat']['id'], getTranslation('gym_name_updated'));
+}
+if(empty($gym_name)){
+    sendMessage($update['message']['chat']['id'], "Arenaname darf nicht leer sein!");
 }
 ?>
