@@ -1052,46 +1052,6 @@ function raid_edit_gyms_first_letter_keys($address) {
     return $keys;
 }
 
-
-/**
- * Raid City selection
- * @return array
- */
-function raid_edit_city_keys() {
-    // Get gyms from database
-    $rs = my_query(
-        "
-            SELECT address
-            FROM      gyms
-            WHERE     show_gym = 1
-            GROUP BY LEFT(address, 1)
-            "
-        );
-    
-    // Init empty keys array.
-    $keys = [];
-    
-    while ($gym = $rs->fetch_assoc()) {
-        // Add first letter to keys array
-        $keys[] = array(
-            'text'          => $gym['address'],
-            'callback_data' => '0:raid_by_gym:' . $gym['address']
-        );
-    }
-    
-    // Get the inline key array.
-    $keys = inline_key_array($keys, 4);
-    
-    // Add back navigation key.
-    $nav_keys = [];
-    $nav_keys[] = universal_inner_key($keys, '0', 'exit', '0', getTranslation('abort'));
-    
-    // Get the inline key array.
-    $keys[] = $nav_keys;
-    
-    return $keys;
-}
-
 /**
  * Raid edit gym keys.
  * @param $first
@@ -1123,40 +1083,6 @@ function raid_edit_gym_keys($first)
     // Get the inline key array.
     $keys = inline_key_array($keys, 1);
 
-    return $keys;
-}
-
-/**
- * Raid edit gym keys.
- * @param $first
- * @return array
- */
-function raid_edit_city_keys($address)
-{
-    // Get gyms from database
-    $rs = my_query(
-        "
-            SELECT    id, gym_name
-            FROM      gyms
-	    WHERE     address = '{$address}'
-            AND       show_gym = 1
-	    ORDER BY  gym_name
-            "
-    );
-    
-    // Init empty keys array.
-    $keys = [];
-    
-    while ($gym = $rs->fetch_assoc()) {
-        $keys[] = array(
-            'text'          => $gym['gym_name'],
-            'callback_data' => $first . ':edit_raidlevel:' . $gym['id']
-        );
-    }
-    
-    // Get the inline key array.
-    $keys = inline_key_array($keys, 1);
-    
     return $keys;
 }
 
