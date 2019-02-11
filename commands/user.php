@@ -26,7 +26,7 @@ $keys = [[
     ],
     [
         'text'          => 'Lvl -',
-        'callback_data' => $user_id.'vote_level2:down'
+        'callback_data' => $user_id.':vote_level2:down'
     ],
     [
         'text'          => 'Fertig',
