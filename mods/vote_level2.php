@@ -35,6 +35,33 @@ if ($action == 'down') {
         "
     );
 }
+$keys = [[
+    [
+        'text'          => TEAM_B,
+        'callback_data' => $user_id.':vote_team2:mystic'
+    ],
+    [
+        'text'          => TEAM_R,
+        'callback_data' => $user_id.':vote_team2:valor'
+    ],
+    [
+        'text'          => TEAM_Y,
+        'callback_data' => $user_id.':vote_team2:instinct'
+    ],
+    [
+        'text'          => 'Lvl +',
+        'callback_data' => $user_id.':vote_level2:up'
+    ],
+    [
+        'text'          => 'Lvl -',
+        'callback_data' => $user_id.'vote_level2:down'
+    ],
+    [
+        'text'          => 'Fertig',
+        'callback_data' => 'exit:1'
+    ]
+    
+]];
 try {
     
     // Update gym name in raid table.

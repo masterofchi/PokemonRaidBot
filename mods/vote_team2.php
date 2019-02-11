@@ -19,28 +19,28 @@ my_query(
 
 $keys = [[
     [
-        'text'          => '+ ' . TEAM_B,
+        'text'          => TEAM_B,
         'callback_data' => $user_id.':vote_team2:mystic'
     ],
     [
-        'text'          => '+ ' . TEAM_R,
+        'text'          => TEAM_R,
         'callback_data' => $user_id.':vote_team2:valor'
     ],
     [
-        'text'          => '+ ' . TEAM_Y,
+        'text'          => TEAM_Y,
         'callback_data' => $user_id.':vote_team2:instinct'
     ],
     [
         'text'          => 'Lvl +',
-        'callback_data' => $user_id.':vote_level:up'
+        'callback_data' => $user_id.':vote_level2:up'
     ],
     [
         'text'          => 'Lvl -',
-        'callback_data' => $user_id.'vote_level:down'
+        'callback_data' => $user_id.'vote_level2:down'
     ],
     [
-        'text'          => getTranslation('abort'),
-        'callback_data' => $gym_id . ':exit:1'
+        'text'          => 'Fertig',
+        'callback_data' => 'exit:1'
     ]
     
 ]];
