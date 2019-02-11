@@ -36,8 +36,6 @@ $keys = [[
 ]];
 
 try {
-    
-    // Update gym name in raid table.
     $query = '
         SELECT level,team
         FROM users

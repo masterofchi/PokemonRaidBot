@@ -73,7 +73,11 @@ catch (PDOException $exception) {
 // Set message.
 $msg = '<b>' . 'Bitte konfiguriere dein Team('. $team .') und Level(' . $level . ')</b>';
 
-// Send vote response.
-edit_message($update, $msg, $keys);
+// Change message string.
+$callback_msg = getTranslation('vote_updated');
+// Answer the callback.
+answerCallbackQuery($update['callback_query']['id'], $callback_msg, true);
+// Edit the message.
+edit_message($update, $msg, $keys, ['disable_web_page_preview' => 'true'], true);
 
 exit();
