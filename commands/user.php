@@ -30,11 +30,11 @@ $keys = [[
     ],
     [
         'text'          => 'Fertig',
-        'callback_data' => 'exit:1'
+        'callback_data' => ':exit:1'
     ]],
     [[
         'text'          => 'Teilen',
-        'callback_data' => 'user_share:1'
+        'callback_data' => ':user_share:1'
     ]]
     
     

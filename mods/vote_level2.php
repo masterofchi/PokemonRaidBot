@@ -58,7 +58,7 @@ $keys = [[
     ],
     [
         'text'          => 'Fertig',
-        'callback_data' => 'exit:1'
+        'callback_data' => ':exit:1'
     ]
     
 ]];
