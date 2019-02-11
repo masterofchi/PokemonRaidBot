@@ -37,12 +37,7 @@ $keys = [[
     [
         'text'          => 'Lvl -',
         'callback_data' => $user_id.':vote_level2:down'
-    ],
-    [
-        'text'          => 'Fertig',
-        'callback_data' => ':exit:1'
-    ]
-    
+    ]    
 ]];
 try {
     
