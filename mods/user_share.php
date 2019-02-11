@@ -45,7 +45,7 @@ $msg_callback = getTranslation('successfully_shared');
 answerCallbackQuery($update['callback_query']['id'], $msg_callback);
 
 // Edit the message, but disable the web preview!
-edit_message($update, $msg_callback, $keys, ['disable_web_page_preview' => 'true']);
+edit_message($update, $msg_callback, [], ['disable_web_page_preview' => 'true']);
 
 $chats = explode(',', SHARE_CHATS);
 foreach($chats as $chat) {
