@@ -36,7 +36,7 @@ $keys = [[
     ],
     [
         'text'          => 'Lvl -',
-        'callback_data' => $user_id.'vote_level2:down'
+        'callback_data' => $user_id.':vote_level2:down'
     ],
     [
         'text'          => 'Fertig',
@@ -68,6 +68,17 @@ catch (PDOException $exception) {
     error_log($exception->getMessage());
     $dbh = null;
     exit;
+}
+switch($team){
+    case 'mystic':
+        $team = TEAM_B;
+        break;
+    case 'valor':
+        $team = TEAM_R;
+        break;
+    case 'instinct':
+        $team = TEAM_Y;
+        break;
 }
 
 // Set message.
