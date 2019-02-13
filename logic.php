@@ -2220,7 +2220,7 @@ function keys_vote($raid)
         }
 
         // Compare if arrays have the same key/value pairs
-        if(count($keys_UI_config) == count($keys_default) && count(array_diff($keys_UI_config, $keys_default)) == 0){
+        if(!empty($keys_UI_config)){
             // Custom keys order
             foreach ($keys_UI_config as $keyname) {
                 $keys = array_merge($keys, ${'buttons_' . $keyname});
