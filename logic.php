@@ -2668,6 +2668,7 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
         $start_time = $raids_active[$raid_id]['ts_start'];
         $end_time = $raids_active[$raid_id]['ts_end'];
         $time_left = floor($raids_active[$raid_id]['t_left'] / 60);
+        $moves = get_raid_moves($gym);
 
         // Build message and add each gym in this format - link gym_name to raid poll chat_id + message_id if possible
         /* Example:
@@ -2707,14 +2708,14 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
             // Is the raid in the same week?
             if($week_now == $week_start && $date_now == $date_raid) {
                 // Output: Raid egg opens up 17:00
-                $msg .= $pokemon . ' â€” <b>' . getRaidTranslation('raid_egg_opens') . ' ' . unix2tz($start_time, $tz);
+                $msg .= $pokemon . ' — <b>' . getRaidTranslation('raid_egg_opens') . ' ' . unix2tz($start_time, $tz);
             } else {
                 if($days_to_raid > 6) {
                     // Output: Raid egg opens on Friday, 13 April (2018)
-                    $msg .= $pokemon . ' â€” <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day . ', ' . $day_start . ' ' . $raid_month . (($year_start > $year_now) ? $year_start : '');
+                    $msg .= $pokemon . ' — <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day . ', ' . $day_start . ' ' . $raid_month . (($year_start > $year_now) ? $year_start : '');
                 } else {
                     // Output: Raid egg opens on Friday
-                    $msg .= $pokemon . ' â€” <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day;
+                    $msg .= $pokemon . ' — <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day;
                 }
                 // Adds 'at 17:00' to the output.
                 $msg .= ' ' . getRaidTranslation('raid_egg_opens_at') . ' ' . unix2tz($start_time, $tz);
@@ -2725,7 +2726,7 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
         // Raid has started already
         } else {
             // Add time left message.
-            $msg .= $pokemon . ' â€” <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
+            $msg .= $pokemon . ' (' . $moves . ')' . ' — <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
         }
 
         // Count attendances
@@ -2753,7 +2754,7 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
 
         // Add to message.
         if ($att['count'] > 0) {
-            $msg .= EMOJI_GROUP . '<b> ' . ($att['count'] + $att['extra_mystic'] + $att['extra_valor'] + $att['extra_instinct']) . '</b> â€” ';
+            $msg .= EMOJI_GROUP . '<b> ' . ($att['count'] + $att['extra_mystic'] + $att['extra_valor'] + $att['extra_instinct']) . '</b> — ';
             $msg .= ((($att['count_mystic'] + $att['extra_mystic']) > 0) ? TEAM_B . ($att['count_mystic'] + $att['extra_mystic']) . '  ' : '');
             $msg .= ((($att['count_valor'] + $att['extra_valor']) > 0) ? TEAM_R . ($att['count_valor'] + $att['extra_valor']) . '  ' : '');
             $msg .= ((($att['count_instinct'] + $att['extra_instinct']) > 0) ? TEAM_Y . ($att['count_instinct'] + $att['extra_instinct']) . '  ' : '');
@@ -2922,10 +2923,14 @@ function show_raid_poll($raid)
     $pokemon_weather = get_pokemon_weather($raid['pokemon']);
     $msg .= ($pokemon_weather != 0) ? (' ' . get_weather_icons($pokemon_weather)) : '';
     $msg .= CR;
+    
+    //Display raid boss moves
+    $moves = get_raid_moves($raid['gym_name']);
+    $msg .= 'Attacken: <b>' . ((!empty($moves)) ? ($moves . CR) : '') . '</b>';
 
     // Display raid boss CP values.
     $pokemon_cp = get_formatted_pokemon_cp($raid['pokemon'], true);
-    $msg .= (!empty($pokemon_cp)) ? ($pokemon_cp . CR) : ''; 
+    $msg .= (!empty($pokemon_cp)) ? ($pokemon_cp . CR) : '';
 
     // Display time left.
     $time_left = floor($raid['t_left'] / 60);
@@ -2933,7 +2938,7 @@ function show_raid_poll($raid)
         $tl_msg = '<b>' . getRaidTranslation('raid_done') . '</b>' . CR;
     } else {
 	// Replace $time_left with $tl_msg too
-        $tl_msg = ' â€” <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
+        $tl_msg = ' — <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
     }
 
     // Raid has not started yet - adjust time left message
@@ -3131,7 +3136,7 @@ function show_raid_poll($raid)
                     $count_late = $cnt[$current_att_time]['count_late'];
 
                     // Add to message.
-                    $msg .= ' â€” ';
+                    $msg .= ' — ';
                     $msg .= (($count_mystic > 0) ? TEAM_B . $count_mystic . '  ' : '');
                     $msg .= (($count_valor > 0) ? TEAM_R . $count_valor . '  ' : '');
                     $msg .= (($count_instinct > 0) ? TEAM_Y . $count_instinct . '  ' : '');
@@ -3162,7 +3167,7 @@ function show_raid_poll($raid)
                     $poke_count_late = $current_att_time_poke['count_late'];
 
                     // Add to message.
-                    $msg .= ' [' . ($current_att_time_poke['count'] + $count_att_time_poke_extrapeople) . '] â€” ';
+                    $msg .= ' [' . ($current_att_time_poke['count'] + $count_att_time_poke_extrapeople) . '] — ';
                     $msg .= (($poke_count_mystic > 0) ? TEAM_B . $poke_count_mystic . '  ' : '');
                     $msg .= (($poke_count_valor > 0) ? TEAM_R . $poke_count_valor . '  ' : '');
                     $msg .= (($poke_count_instinct > 0) ? TEAM_Y . $poke_count_instinct . '  ' : '');
@@ -3401,7 +3406,7 @@ function show_raid_poll_small($raid)
         $count_instinct = $row['count_instinct'] + $row['extra_instinct'];
 
         // Add to message.
-        $msg .= EMOJI_GROUP . '<b> ' . ($row['count'] + $row['extra_mystic'] + $row['extra_valor'] + $row['extra_instinct']) . '</b> â€” ';
+        $msg .= EMOJI_GROUP . '<b> ' . ($row['count'] + $row['extra_mystic'] + $row['extra_valor'] + $row['extra_instinct']) . '</b> — ';
         $msg .= (($count_mystic > 0) ? TEAM_B . $count_mystic . '  ' : '');
         $msg .= (($count_valor > 0) ? TEAM_R . $count_valor . '  ' : '');
         $msg .= (($count_instinct > 0) ? TEAM_Y . $count_instinct . '  ' : '');
@@ -3495,4 +3500,32 @@ function raid_list($update)
 
     debug_log($rows);
     answerInlineQuery($update['inline_query']['id'], $rows);
+}
+
+/**
+ * Get moves for raid pokemon.
+ * @param $gym_name
+ * @return string
+ */
+function get_raid_moves($gym_name)
+{
+    
+    // Get moves from database
+    $rs = my_query(
+        "
+        select move_1, move_2
+        from mapadroid.raid_moves as raid_moves
+        where name = '{$gym_name}';
+            "
+    );
+    
+    while($row = $rs->fetch_assoc()) {
+        debug_log($row);
+        // moves
+        $moves .= $row['move_1'];
+        $moves .= '/';
+        $moves .= $row['move_2'];
+    }
+    
+    return $moves;
 }
