@@ -1660,8 +1660,7 @@ function run_raids_cleanup ($telegram = 2, $database = 2) {
                 SELECT    * 
                 FROM      cleanup
                   WHERE   chat_id <> 0
-                  ORDER BY id DESC
-                  LIMIT 0, 250     
+                  ORDER BY id DESC  
                 ", true
             );
         // Query for database cleanup without telegram cleanup
@@ -1672,7 +1671,6 @@ function run_raids_cleanup ($telegram = 2, $database = 2) {
                 SELECT    * 
                 FROM      cleanup
                   WHERE   chat_id = 0
-                  LIMIT 0, 250
                 ", true
             );
         // Query for telegram and database cleanup
@@ -1682,7 +1680,6 @@ function run_raids_cleanup ($telegram = 2, $database = 2) {
                 "
                 SELECT    * 
                 FROM      cleanup
-                  LIMIT 0, 250
                 ", true
             );
         }
