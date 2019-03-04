@@ -2705,14 +2705,14 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
             // Is the raid in the same week?
             if($week_now == $week_start && $date_now == $date_raid) {
                 // Output: Raid egg opens up 17:00
-                $msg .= $pokemon . ' � <b>' . getRaidTranslation('raid_egg_opens') . ' ' . unix2tz($start_time, $tz);
+                $msg .= $pokemon . ' — <b>' . getRaidTranslation('raid_egg_opens') . ' ' . unix2tz($start_time, $tz);
             } else {
                 if($days_to_raid > 6) {
                     // Output: Raid egg opens on Friday, 13 April (2018)
-                    $msg .= $pokemon . ' � <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day . ', ' . $day_start . ' ' . $raid_month . (($year_start > $year_now) ? $year_start : '');
+                    $msg .= $pokemon . ' — <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day . ', ' . $day_start . ' ' . $raid_month . (($year_start > $year_now) ? $year_start : '');
                 } else {
                     // Output: Raid egg opens on Friday
-                    $msg .= $pokemon . ' � <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day;
+                    $msg .= $pokemon . ' — <b>' . getRaidTranslation('raid_egg_opens_day') . ' ' .  $raid_day;
                 }
                 // Adds 'at 17:00' to the output.
                 $msg .= ' ' . getRaidTranslation('raid_egg_opens_at') . ' ' . unix2tz($start_time, $tz);
@@ -2723,7 +2723,7 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
         // Raid has started already
         } else {
             // Add time left message.
-            $msg .= $pokemon . ' (' . $moves . ')' . ' � <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
+            $msg .= $pokemon . ' (' . $moves . ')' . ' — <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
         }
 
         // Count attendances
@@ -2751,7 +2751,7 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
 
         // Add to message.
         if ($att['count'] > 0) {
-            $msg .= EMOJI_GROUP . '<b> ' . ($att['count'] + $att['extra_mystic'] + $att['extra_valor'] + $att['extra_instinct']) . '</b> � ';
+            $msg .= EMOJI_GROUP . '<b> ' . ($att['count'] + $att['extra_mystic'] + $att['extra_valor'] + $att['extra_instinct']) . '</b> — ';
             $msg .= ((($att['count_mystic'] + $att['extra_mystic']) > 0) ? TEAM_B . ($att['count_mystic'] + $att['extra_mystic']) . '  ' : '');
             $msg .= ((($att['count_valor'] + $att['extra_valor']) > 0) ? TEAM_R . ($att['count_valor'] + $att['extra_valor']) . '  ' : '');
             $msg .= ((($att['count_instinct'] + $att['extra_instinct']) > 0) ? TEAM_Y . ($att['count_instinct'] + $att['extra_instinct']) . '  ' : '');
@@ -2935,7 +2935,7 @@ function show_raid_poll($raid)
         $tl_msg = '<b>' . getRaidTranslation('raid_done') . '</b>' . CR;
     } else {
 	// Replace $time_left with $tl_msg too
-        $tl_msg = ' � <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
+        $tl_msg = ' — <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
     }
 
     // Raid has not started yet - adjust time left message
@@ -3133,7 +3133,7 @@ function show_raid_poll($raid)
                     $count_late = $cnt[$current_att_time]['count_late'];
 
                     // Add to message.
-                    $msg .= ' � ';
+                    $msg .= ' — ';
                     $msg .= (($count_mystic > 0) ? TEAM_B . $count_mystic . '  ' : '');
                     $msg .= (($count_valor > 0) ? TEAM_R . $count_valor . '  ' : '');
                     $msg .= (($count_instinct > 0) ? TEAM_Y . $count_instinct . '  ' : '');
@@ -3164,7 +3164,7 @@ function show_raid_poll($raid)
                     $poke_count_late = $current_att_time_poke['count_late'];
 
                     // Add to message.
-                    $msg .= ' [' . ($current_att_time_poke['count'] + $count_att_time_poke_extrapeople) . '] � ';
+                    $msg .= ' [' . ($current_att_time_poke['count'] + $count_att_time_poke_extrapeople) . '] — ';
                     $msg .= (($poke_count_mystic > 0) ? TEAM_B . $poke_count_mystic . '  ' : '');
                     $msg .= (($poke_count_valor > 0) ? TEAM_R . $poke_count_valor . '  ' : '');
                     $msg .= (($poke_count_instinct > 0) ? TEAM_Y . $poke_count_instinct . '  ' : '');
@@ -3175,7 +3175,7 @@ function show_raid_poll($raid)
             }
 
             // Add users: ARRIVED --- TEAM -- LEVEL -- NAME -- INVITE -- EXTRAPEOPLE
-            $msg .= ($row['arrived']) ? (EMOJI_HERE . ' ') : (($row['late']) ? (EMOJI_LATE . ' ') : '└ ');
+            $msg .= ($row['arrived']) ? (EMOJI_HERE . ' ') : (($row['late']) ? (EMOJI_LATE . ' ') : 'â”” ');
             $msg .= ($row['team'] === NULL) ? ($GLOBALS['teams']['unknown'] . ' ') : ($GLOBALS['teams'][$row['team']] . ' ');
             $msg .= ($row['level'] == 0) ? ('<b>00</b> ') : (($row['level'] < 10) ? ('<b>0' . $row['level'] . '</b> ') : ('<b>' . $row['level'] . '</b> '));
             $msg .= '<a href="tg://user?id=' . $row['user_id'] . '">' . htmlspecialchars($row['name']) . '</a> ';
@@ -3275,7 +3275,7 @@ function show_raid_poll($raid)
             }
 
             // Add users: TEAM -- LEVEL -- NAME -- CANCELED/DONE -- EXTRAPEOPLE
-            $msg .= ($row['team'] === NULL) ? ('└ ' . $GLOBALS['teams']['unknown'] . ' ') : ('└ ' . $GLOBALS['teams'][$row['team']] . ' ');
+            $msg .= ($row['team'] === NULL) ? ('â”” ' . $GLOBALS['teams']['unknown'] . ' ') : ('â”” ' . $GLOBALS['teams'][$row['team']] . ' ');
             $msg .= ($row['level'] == 0) ? ('<b>00</b> ') : (($row['level'] < 10) ? ('<b>0' . $row['level'] . '</b> ') : ('<b>' . $row['level'] . '</b> '));
             $msg .= '<a href="tg://user?id=' . $row['user_id'] . '">' . htmlspecialchars($row['name']) . '</a> ';
             $msg .= ($raid_level == 'X' && $row['invite']) ? (EMOJI_INVITE . ' ') : '';
@@ -3403,7 +3403,7 @@ function show_raid_poll_small($raid)
         $count_instinct = $row['count_instinct'] + $row['extra_instinct'];
 
         // Add to message.
-        $msg .= EMOJI_GROUP . '<b> ' . ($row['count'] + $row['extra_mystic'] + $row['extra_valor'] + $row['extra_instinct']) . '</b> � ';
+        $msg .= EMOJI_GROUP . '<b> ' . ($row['count'] + $row['extra_mystic'] + $row['extra_valor'] + $row['extra_instinct']) . '</b> — ';
         $msg .= (($count_mystic > 0) ? TEAM_B . $count_mystic . '  ' : '');
         $msg .= (($count_valor > 0) ? TEAM_R . $count_valor . '  ' : '');
         $msg .= (($count_instinct > 0) ? TEAM_Y . $count_instinct . '  ' : '');
