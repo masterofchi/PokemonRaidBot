@@ -1660,8 +1660,7 @@ function run_raids_cleanup ($telegram = 2, $database = 2) {
                 SELECT    * 
                 FROM      cleanup
                   WHERE   chat_id <> 0
-                  ORDER BY id DESC
-                  LIMIT 0, 250     
+                  ORDER BY id DESC  
                 ", true
             );
         // Query for database cleanup without telegram cleanup
@@ -1672,7 +1671,6 @@ function run_raids_cleanup ($telegram = 2, $database = 2) {
                 SELECT    * 
                 FROM      cleanup
                   WHERE   chat_id = 0
-                  LIMIT 0, 250
                 ", true
             );
         // Query for telegram and database cleanup
@@ -1682,7 +1680,6 @@ function run_raids_cleanup ($telegram = 2, $database = 2) {
                 "
                 SELECT    * 
                 FROM      cleanup
-                  LIMIT 0, 250
                 ", true
             );
         }
@@ -2668,6 +2665,7 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
         $start_time = $raids_active[$raid_id]['ts_start'];
         $end_time = $raids_active[$raid_id]['ts_end'];
         $time_left = floor($raids_active[$raid_id]['t_left'] / 60);
+        $moves = get_raid_moves($gym);
 
         // Build message and add each gym in this format - link gym_name to raid poll chat_id + message_id if possible
         /* Example:
@@ -2725,7 +2723,7 @@ function get_overview($update, $chats_active, $raids_active, $action = 'refresh'
         // Raid has started already
         } else {
             // Add time left message.
-            $msg .= $pokemon . ' — <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
+            $msg .= $pokemon . ' (' . $moves . ')' . ' — <b>' . getRaidTranslation('still') . ' ' . floor($time_left / 60) . ':' . str_pad($time_left % 60, 2, '0', STR_PAD_LEFT) . 'h</b>' . CR;
         }
 
         // Count attendances
@@ -2922,10 +2920,14 @@ function show_raid_poll($raid)
     $pokemon_weather = get_pokemon_weather($raid['pokemon']);
     $msg .= ($pokemon_weather != 0) ? (' ' . get_weather_icons($pokemon_weather)) : '';
     $msg .= CR;
+    
+    //Display raid boss moves
+    $moves = get_raid_moves($raid['gym_name']);
+    $msg .= 'Attacken: <b>' . ((!empty($moves)) ? ($moves . CR) : '') . '</b>';
 
     // Display raid boss CP values.
     $pokemon_cp = get_formatted_pokemon_cp($raid['pokemon'], true);
-    $msg .= (!empty($pokemon_cp)) ? ($pokemon_cp . CR) : ''; 
+    $msg .= (!empty($pokemon_cp)) ? ($pokemon_cp . CR) : '';
 
     // Display time left.
     $time_left = floor($raid['t_left'] / 60);
@@ -3173,7 +3175,7 @@ function show_raid_poll($raid)
             }
 
             // Add users: ARRIVED --- TEAM -- LEVEL -- NAME -- INVITE -- EXTRAPEOPLE
-            $msg .= ($row['arrived']) ? (EMOJI_HERE . ' ') : (($row['late']) ? (EMOJI_LATE . ' ') : '└ ');
+            $msg .= ($row['arrived']) ? (EMOJI_HERE . ' ') : (($row['late']) ? (EMOJI_LATE . ' ') : 'â”” ');
             $msg .= ($row['team'] === NULL) ? ($GLOBALS['teams']['unknown'] . ' ') : ($GLOBALS['teams'][$row['team']] . ' ');
             $msg .= ($row['level'] == 0) ? ('<b>00</b> ') : (($row['level'] < 10) ? ('<b>0' . $row['level'] . '</b> ') : ('<b>' . $row['level'] . '</b> '));
             $msg .= '<a href="tg://user?id=' . $row['user_id'] . '">' . htmlspecialchars($row['name']) . '</a> ';
@@ -3273,7 +3275,7 @@ function show_raid_poll($raid)
             }
 
             // Add users: TEAM -- LEVEL -- NAME -- CANCELED/DONE -- EXTRAPEOPLE
-            $msg .= ($row['team'] === NULL) ? ('└ ' . $GLOBALS['teams']['unknown'] . ' ') : ('└ ' . $GLOBALS['teams'][$row['team']] . ' ');
+            $msg .= ($row['team'] === NULL) ? ('â”” ' . $GLOBALS['teams']['unknown'] . ' ') : ('â”” ' . $GLOBALS['teams'][$row['team']] . ' ');
             $msg .= ($row['level'] == 0) ? ('<b>00</b> ') : (($row['level'] < 10) ? ('<b>0' . $row['level'] . '</b> ') : ('<b>' . $row['level'] . '</b> '));
             $msg .= '<a href="tg://user?id=' . $row['user_id'] . '">' . htmlspecialchars($row['name']) . '</a> ';
             $msg .= ($raid_level == 'X' && $row['invite']) ? (EMOJI_INVITE . ' ') : '';
@@ -3495,4 +3497,32 @@ function raid_list($update)
 
     debug_log($rows);
     answerInlineQuery($update['inline_query']['id'], $rows);
+}
+
+/**
+ * Get moves for raid pokemon.
+ * @param $gym_name
+ * @return string
+ */
+function get_raid_moves($gym_name)
+{
+    
+    // Get moves from database
+    $rs = my_query(
+        "
+        select move_1, move_2
+        from mapadroid.raid_moves as raid_moves
+        where name = '{$gym_name}';
+            "
+    );
+    
+    while($row = $rs->fetch_assoc()) {
+        debug_log($row);
+        // moves
+        $moves .= $row['move_1'];
+        $moves .= '/';
+        $moves .= $row['move_2'];
+    }
+    
+    return $moves;
 }
